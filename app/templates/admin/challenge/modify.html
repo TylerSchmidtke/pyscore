@@ -1,0 +1,48 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="container">
+    <table class="table table-responsive table-fill">
+        <tr>
+            <th class="text-center">Plain Text</th>
+            <th class="text-center">Challenge Text</th>
+            <th class="text-center">Attachment</th>
+            <th class="text-center">Points</th>
+            <th class="text-center">Case Sensitive</th>
+            <th class="text-center">Fuzzy Answer</th>
+            <th class="text-center">Active</th>
+        </tr>
+        <tbody>
+            <tr>
+                <td class="text-center">{{ challenge.plain_text }}</td>
+                <td class="text-center">{{ challenge.challenge_text }}</td>
+                {% if challenge.attachment_path %}
+                <td class="text-center"><a href="{{ url_for('static', filename='attachments/' + challenge.attachment_path) }}">{{ challenge.attachment_path }}</a></td>
+                {% else %}
+                <td class="text-center">None</td>
+                {% endif %}
+                <td class="text-center">{{ challenge.points }}</td>
+                <td class="text-center">{{ challenge.case_sensitive }}</td>
+                <td class="text-center">{{ challenge.fuzzy_answer }}</td>
+                <td class="text-center">{{ challenge.active }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <table class="table table-responsive table-fill">
+        <tr>
+            <th class="text-center">Notes</th>
+        </tr>
+        <tbody>
+            <tr>
+                <td class="text-left">{{ challenge.notes }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br>
+    <div class="container" style="width: 80%; max-width: 400px;">
+        {{ wtf.quick_form(form) }}
+    </div>
+</div>
+{% endblock %}

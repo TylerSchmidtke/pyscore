@@ -1,0 +1,7 @@
+.idea/
+config.py
+app/static/attachments/
+.DS_STORE
+*.pyc
+*.pyo
+__pycache__/

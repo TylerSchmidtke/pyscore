@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container scoreboard">
+<table class="table table-responsive table-fill">
+    <tr>
+        <th class="text-center">User</th>
+        <th class="text-center">Score</th>
+    </tr>
+    <tbody class="table-hover">
+    {% for user in users %}
+    <tr>
+        <td class="text-center">{{ user.displayname }}</td>
+        <td class="text-center">{{ user.score }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+</table>
+</div>
+{% endblock %}

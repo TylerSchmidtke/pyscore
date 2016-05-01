@@ -1,0 +1,9 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="container" style=" width: 90%; max-width: 400px;">
+    <h2>Search Users:</h2>
+    {{ wtf.quick_form(form) }}
+</div>
+{% endblock %}

@@ -1,0 +1,54 @@
+{% extends 'base.html' %}
+{% import 'bootstrap/wtf.html' as wtf %}
+
+{% block content %}
+<div class="container">
+    <table class="table table-responsive table-fill">
+    {%  if current_user.is_authenticated %}
+    <tr>
+        <th class="table-left">Challenge Submission</th>
+        <th class="table-left">Challenge</th>
+        <th class="table-left">Points</th>
+        <th class="hidden-xs hidden-sm">Success / Failure</th>
+    </tr>
+    <tbody>
+    {% for form in forms %}
+    <tr>
+        {%  if not form.solved %}
+        <td>{{ wtf.quick_form(form.f) }}</td>
+        {% else %}
+        <td class="table-left">Solved!</td>
+        {% endif %}
+        <td class="table-left">
+            {{ form.challenge_text }}
+            {% if form.attachment_path %}
+            <br>
+            <a href="{{ url_for('static', filename='attachments/' + form.attachment_path) }}">{{ form.attachment_path }}</a>
+            {% endif %}
+        </td>
+        <td class="table-left">{{ form.points }}</td>
+        <td class="hidden-xs hidden-sm">{{ form.successes }} / {{ form.failures }}</td>
+    </tr>
+    {% endfor %}
+    </tbody>
+    {% else %}
+    <tr>
+        <th class="table-left">Challenge</th>
+        <th class="table-left">Points</th>
+        <th class="table-left hidden-xs hidden-sm">Success / Failure</th>
+    </tr>
+    <tbody>
+    {% for form in forms %}
+    <tr>
+        <td class="table-left">{{ form.challenge_text }}</td>
+        <td class="table-left">{{ form.points}}</td>
+        <td class="table-left hidden-xs hidden-sm">{{ form.successes }} / {{ form.failures }}</td>
+    </tr>
+    {%  endfor %}
+    </tbody>
+    {% endif %}
+
+
+    </table>
+</div>
+{% endblock %}
