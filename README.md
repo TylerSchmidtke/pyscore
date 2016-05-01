@@ -1,2 +1,2 @@
-#PyScore
-###A cyber security competition and wargame scoring engine.
+# PyScore
+### A cyber security competition and wargame scoring engine.
