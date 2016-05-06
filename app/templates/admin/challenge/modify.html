@@ -2,19 +2,38 @@
 {% import 'bootstrap/wtf.html' as wtf %}
 
 {% block content %}
-<div class="container">
+<div class="container" style="margin-bottom: 25px;">
     <table class="table table-responsive table-fill">
         <tr>
             <th class="text-center">Plain Text</th>
             <th class="text-center">Challenge Text</th>
-            <th class="text-center">Attachment</th>
-            <th class="text-center">Points</th>
-            <th class="text-center">Active</th>
+            <th class="text-center hidden-xs">Attachment</th>
+            <th class="text-center hidden-xs">Points</th>
+            <th class="text-center hidden-xs">Active</th>
         </tr>
         <tbody>
             <tr>
                 <td class="text-center">{{ challenge.plain_text }}</td>
                 <td class="text-center">{{ challenge.challenge_text }}</td>
+                {% if challenge.attachment_path %}
+                <td class="text-center hidden-xs"><a href="{{ url_for('static', filename='attachments/' + challenge.attachment_path) }}">{{ challenge.attachment_path }}</a></td>
+                {% else %}
+                <td class="text-center hidden-xs">None</td>
+                {% endif %}
+                <td class="text-center hidden-xs">{{ challenge.points }}</td>
+                <td class="text-center hidden-xs">{{ challenge.active }}</td>
+            </tr>
+        </tbody>
+    </table>
+    <br class="visible-xs">
+    <table class="table table-responsive table-fill visible-xs">
+        <tr>
+            <th class="text-center visible-xs">Attachment</th>
+            <th class="text-center visible-xs">Points</th>
+            <th class="text-center visible-xs">Active</th>
+        </tr>
+        <tbody>
+            <tr>
                 {% if challenge.attachment_path %}
                 <td class="text-center"><a href="{{ url_for('static', filename='attachments/' + challenge.attachment_path) }}">{{ challenge.attachment_path }}</a></td>
                 {% else %}
