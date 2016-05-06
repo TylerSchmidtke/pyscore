@@ -8,8 +8,8 @@
         <th class="text-center">Username</th>
         <th class="text-center">Score</th>
         <th class="text-center">Roles</th>
-        <th class="text-center">Join Time</th>
-        <th class="text-center">IP</th>
+        <th class="text-center hidden-xs">Join Time</th>
+        <th class="text-center hidden-xs">IP</th>
     </tr>
     <tbody class="table-hover">
     {% for user in users %}
@@ -17,8 +17,8 @@
         <td class="text-center"><a href="{{ url_for('admin.user_modify', user=user.username) }}">{{ user.username }}</a></td>
         <td class="text-center">{{ user.score }}</td>
         <td class="text-center">{{ user.roles }}</td>
-        <td class="text-center">{{ user.join_time }}</td>
-        <td class="text-center">{{ user.registration_ip }}</td>
+        <td class="text-center hidden-xs">{{ user.join_time }}</td>
+        <td class="text-center hidden-xs">{{ user.registration_ip }}</td>
     </tr>
     {% endfor %}
     </tbody>

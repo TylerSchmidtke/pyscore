@@ -4,24 +4,34 @@
 {% block content %}
 <div class="container">
     <table class="table table-responsive table-fill">
-        <thead>
+        <tr>
             <th class="text-center">Username</th>
             <th class="text-center">Score</th>
             <th class="text-center">Roles</th>
-            <th class="text-center">Join Time</th>
-            <th class="text-center">IP</th>
-        </thead>
-        <tbody class="table-hover">
+            <th class="text-center hidden-xs">Join Time</th>
+            <th class="text-center hidden-xs">IP</th>
+        </tr>
+        <tbody>
             <tr>
                 <td class="text-center">{{ user.username }}</td>
                 <td class="text-center">{{ user.score }}</td>
                 <td class="text-center">{{ user.roles }}</td>
-                <td class="text-center">{{ user.join_time }}</td>
-                <td class="text-center">{{ user.registration_ip }}</td>
+                <td class="text-center hidden-xs">{{ user.join_time }}</td>
+                <td class="text-center hidden-xs">{{ user.registration_ip }}</td>
             </tr>
         </tbody>
     </table>
     <br>
+    <table class="table table-responsive table-fill">
+        <tr>
+            <th class="text-center visible-xs">Join Time</th>
+            <th class="text-center visible-xs">IP</th>
+        </tr>
+        <tbody>
+             <td class="text-center visible-xs">{{ user.join_time }}</td>
+             <td class="text-center visible-xs">{{ user.registration_ip }}</td>
+        </tbody>
+    </table>
     <div class="container" style="width: 60%; max-width: 400px;">
         {{ wtf.quick_form(form) }}
     </div>
