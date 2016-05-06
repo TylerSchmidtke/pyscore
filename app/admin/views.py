@@ -35,8 +35,8 @@ def create_challenge():
             filename = attachments.save(request.files['attachment'])
             challenge.attachment_path = filename
             challenge.save()
-        flash("Challenge created!")
-        return redirect(url_for('admin.list_challenges'))
+        flash("Challenge created.")
+        return redirect(url_for('admin.create_challenge'))
     return render_template('admin/challenge/create.html', form=form)
 
 
@@ -67,12 +67,12 @@ def modify_challenge(challenge_id):
                     os.path.isfile('app/static/attachments/' + c.attachment_path):
                 os.remove('app/static/attachments/' + c.attachment_path)
 
-            flash('Challenge Deleted!')
+            flash('Challenge Deleted.')
             c.delete()
             return redirect(url_for('admin.list_challenges'))
         if form.points.data != c.points:
             c.update(set__points=form.points.data)
-            flash('Updated Points!')
+            flash('Updated Points.')
         if form.active.data != c.active:
             c.update(set__active=form.active.data)
             if form.active.data:
@@ -124,7 +124,7 @@ def user_modify(user):
     if form.validate_on_submit():
         if form.delete.data:
             u.delete()
-            flash('User Deleted!')
+            flash('User Deleted.')
             return redirect(url_for('admin.list_users'))
         if form.password.data != '':
             # Not sure why this is returned as a byte array, convert to utf-8
