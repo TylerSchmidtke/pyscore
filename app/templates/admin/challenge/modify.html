@@ -9,8 +9,6 @@
             <th class="text-center">Challenge Text</th>
             <th class="text-center">Attachment</th>
             <th class="text-center">Points</th>
-            <th class="text-center">Case Sensitive</th>
-            <th class="text-center">Fuzzy Answer</th>
             <th class="text-center">Active</th>
         </tr>
         <tbody>
@@ -23,8 +21,6 @@
                 <td class="text-center">None</td>
                 {% endif %}
                 <td class="text-center">{{ challenge.points }}</td>
-                <td class="text-center">{{ challenge.case_sensitive }}</td>
-                <td class="text-center">{{ challenge.fuzzy_answer }}</td>
                 <td class="text-center">{{ challenge.active }}</td>
             </tr>
         </tbody>
@@ -33,10 +29,14 @@
     <table class="table table-responsive table-fill">
         <tr>
             <th class="text-center">Notes</th>
+            <th class="text-center">Case Sensitive</th>
+            <th class="text-center">Fuzzy Answer</th>
         </tr>
         <tbody>
             <tr>
                 <td class="text-left">{{ challenge.notes }}</td>
+                <td class="text-center">{{ challenge.case_sensitive }}</td>
+                <td class="text-center">{{ challenge.fuzzy_answer }}</td>
             </tr>
         </tbody>
     </table>
