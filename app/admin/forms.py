@@ -11,7 +11,10 @@ POINTS = [(i, i) for i in list(range(5, 105, 5))]
 HASHES = [(i, i) for i in dir(hash)[28:]]
 HASHES.insert(0, ("custom", "custom"))
 REMOVE_HASHES = ['django_disabled', 'unix_disabled',
-                 'plaintext', 'roundup_plaintext', 'unix_fallback']
+                 'plaintext', 'roundup_plaintext',
+                 'unix_fallback', 'oracle10',
+                 'msdcc', 'msdcc2',
+                 'htdigest', 'ldap_plaintext']
 for h in REMOVE_HASHES:
     HASHES.remove((h, h))
 

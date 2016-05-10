@@ -1,0 +1,28 @@
+{% extends 'base.html' %}
+{% block content %}
+<div class="container">
+    <table class="table table-responsive table-fill">
+    <tr>
+        <th>Time</th>
+        <th>User</th>
+        <th>Message</th>
+        <th class="hidden-xs">IP</th>
+    </tr>
+    <tbody>
+        {% for log in logs.items %}
+        <tr>
+            <td>{{ log.timestamp }}</td>
+            <td>{{ log.user }}</td>
+            <td>{{ log.message }}</td>
+            <td class="hidden-xs">{{ log.ip }}</td>
+        </tr>
+        {% endfor %}
+    </tbody>
+    </table>
+    <div class="pull-right">
+    {% for page in logs.iter_pages() %}
+        <a href="{{ url_for('admin.list_audit_logs', page=page) }}">{{ page }}</a>
+    {% endfor %}
+    </div>
+</div>
+{% endblock %}

@@ -18,7 +18,6 @@ attachments = UploadSet('attachments', ALL)
 ROLES = [('administrator', 'administrator'),
          ('contributer', 'contributer'),
          ('user', 'user')]
-HASHES = [(i, i) for i in dir(hash)[28:]]
 
 
 def create_app(config_name):

@@ -1,8 +1,9 @@
 from flask import redirect, url_for, render_template, flash, request
 from flask.ext.bcrypt import generate_password_hash
+from flask.ext.login import current_user
 from passlib import hash
 from . import admin
-from ..models import Challenge, User
+from ..models import Challenge, User, Audit
 from .forms import CreateChallengeForm, ModifyChallengeForm, SearchUserForm, ModifyUserForm
 from ..decorators import role_required
 from .. import attachments
@@ -14,7 +15,7 @@ import os
 def create_challenge():
     form = CreateChallengeForm()
     if form.validate_on_submit():
-        if form.hash_type.data:
+        if form.hash_type.data and form.hash_type.data != "custom":
             hasher = getattr(hash, form.hash_type.data)
             form.challenge_text.data = hasher.encrypt(form.plain_text.data.rstrip())
             if form.notes.data:
@@ -22,19 +23,24 @@ def create_challenge():
             else:
                 form.notes.data = form.hash_type.data
         if not form.case_sensitive.data:
-            form.plain_text.data = form.plain_text.data.rstrip().l
-        challenge = Challenge(plain_text=form.plain_text.data.rstrip(),
-                              challenge_text=form.challenge_text.data.rstrip(),
-                              notes=form.notes.data,
-                              points=form.points.data,
-                              active=form.active.data,
-                              case_sensitive=form.case_sensitive.data,
-                              fuzzy_answer=form.fuzzy_answer.data)
-        challenge.save()
+            form.plain_text.data = form.plain_text.data.rstrip().lower()
+        c = Challenge(plain_text=form.plain_text.data.rstrip(),
+                      challenge_text=form.challenge_text.data.rstrip(),
+                      notes=form.notes.data,
+                      points=form.points.data,
+                      active=form.active.data,
+                      case_sensitive=form.case_sensitive.data,
+                      fuzzy_answer=form.fuzzy_answer.data)
+        c.save()
         if request.files['attachment']:
             filename = attachments.save(request.files['attachment'])
-            challenge.attachment_path = filename
-            challenge.save()
+            c.attachment_path = filename
+            c.save()
+        a = Audit(user=current_user.username,
+                  message="Created challenge " + str(c.id),
+                  message_type="admin",
+                  ip=request.remote_addr)
+        a.save()
         flash("Challenge created.")
         return redirect(url_for('admin.create_challenge'))
     return render_template('admin/challenge/create.html', form=form)
@@ -58,6 +64,12 @@ def modify_challenge(challenge_id):
         form.fuzzy_answer.data = c.fuzzy_answer
 
     if form.validate_on_submit():
+
+        # Create audit log object
+        a = Audit(user=current_user.username,
+                  message_type="admin",
+                  ip=request.remote_addr)
+
         if form.delete.data:
             # Delete challenge from all users, adjust their score,
             # and delete the challenge
@@ -67,23 +79,33 @@ def modify_challenge(challenge_id):
                     os.path.isfile('app/static/attachments/' + c.attachment_path):
                 os.remove('app/static/attachments/' + c.attachment_path)
 
+            a.message = "Deleted challenge ID " + str(c.id)
             flash('Challenge Deleted.')
             c.delete()
+            a.save()
             return redirect(url_for('admin.list_challenges'))
+
         if form.points.data != c.points:
             c.update(set__points=form.points.data)
+            a.message = "Update points for challenge ID " + str(c.id)
             flash('Updated Points.')
+
         if form.active.data != c.active:
             c.update(set__active=form.active.data)
             if form.active.data:
+                a.message = "Activated challenge ID " + str(c.id)
                 flash('Activated Challenge.')
             else:
+                a.message = "Deactivated challenge ID " + str(c.id)
                 flash('Deactivated Challenge.')
+
         if form.fuzzy_answer.data != c.fuzzy_answer:
             c.update(set__fuzzy_answer=form.fuzzy_answer.data)
             if form.fuzzy_answer.data:
+                a.message = "Enabled fuzzy answers on challenge ID " + str(c.id)
                 flash('Challenge now accepts fuzzy answers.')
             else:
+                a.message = "Disabled fuzzy answers on challenge ID " + str(c.id)
                 flash('Challenge no longer accepts fuzzy answers.')
 
         # Check for new attachment and update, deleting old attachment
@@ -93,8 +115,9 @@ def modify_challenge(challenge_id):
                 os.remove('app/static/attachments/' + c.attachment_path)
             filename = attachments.save(request.files['attachment'])
             c.update(set__attachment_path=filename)
+            a.message = "Changed attachment on challenge ID " + str(c.id)
             flash('Updated Attachment.')
-
+        a.save()
         return redirect(url_for('admin.list_challenges'))
     return render_template('admin/challenge/modify.html', challenge=c, form=form)
 
@@ -134,3 +157,10 @@ def user_modify(user):
             u.update(set__score=form.score.data)
             flash('Score updated')
     return render_template('admin/user/modify.html', user=u, form=form)
+
+
+@admin.route('/audit/list/<page>')
+@role_required('administrator')
+def list_audit_logs(page):
+    logs = Audit.objects.order_by('-timestamp').paginate(page=int(page), per_page=25)
+    return render_template('admin/audit/list.html', logs=logs)

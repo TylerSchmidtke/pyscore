@@ -46,6 +46,14 @@ class AnonymousUser(AnonymousUserMixin):
     roles = []
 
 
+class Audit(db.Document):
+    timestamp = db.DateTimeField(default=datetime.datetime.now)
+    user = db.StringField()
+    message = db.StringField()
+    message_type = db.StringField()
+    ip = db.StringField(default=None)
+
+
 @login_manager.user_loader
 def load_user(user_id):
     return User.objects.get(id=user_id)
