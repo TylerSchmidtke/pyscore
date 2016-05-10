@@ -7,6 +7,11 @@ from .. import ROLES
 
 POINTS = [(i, i) for i in list(range(5, 105, 5))]
 
+# Role removal choices, you can't remove user
+REMOVE_ROLES = ROLES
+REMOVE_ROLES.insert(0, ('', ''))
+REMOVE_ROLES.remove(('user', 'user'))
+
 # Generate a list of selections for hash_type, remove miscellaneous non-hashes
 HASHES = [(i, i) for i in dir(hash)[28:]]
 HASHES.insert(0, ("custom", "custom"))
@@ -65,4 +70,6 @@ class ModifyUserForm(Form):
     password = PasswordField('Password', validators=[Optional(), Length(8, 128)])
 
     score = IntegerField('Score', validators=[Optional()])
+    role = SelectField('Role', choices=REMOVE_ROLES, default=('', ''))
+    remove_role = BooleanField('Remove Role', validators=[Optional()])
     submit = SubmitField('Update!')

@@ -156,6 +156,16 @@ def user_modify(user):
         if form.score.data:
             u.update(set__score=form.score.data)
             flash('Score updated')
+        if form.role.data != '':
+            if form.remove_role.data:
+                if form.role.data in u.roles:
+                    u.update(pop__roles=form.role.data)
+                    flash('Removed ' + form.role.data + ' role.')
+            else:
+                if form.role.data not in u.roles:
+                    u.update(push__roles=form.role.data)
+                    flash('Added ' + form.role.data + ' role.')
+        return redirect(url_for('admin.user_modify', user=user))
     return render_template('admin/user/modify.html', user=u, form=form)
 
 
