@@ -28,6 +28,31 @@ def test():
     unittest.TextTestRunner(verbosity=2).run(tests)
 
 
+@manager.option('-e', '--env', dest='env', default='prod', help='Environment: dev or prod.')
+@manager.option('-d', '--db', dest='db_url', default='localhost', help='MongoDB URL: default=localhost')
+def setup(env, db_url):
+    # Create connection
+    from pymongo import MongoClient
+    from flask.ext.bcrypt import generate_password_hash
+    con = MongoClient(db_url, 27017)
+
+    if env == 'prod':
+        db_env = con['pyscore']
+    else:
+        db_env = con['pyscore-dev']
+
+    # Insert admin user
+    admin = {
+        'displayname': 'admin',
+        'username': 'admin',
+        'password_hash': generate_password_hash('pyscore', 15).decode('utf-8'),
+        'roles': ['administrator', 'contributer', 'user']
+    }
+    user = db_env.user
+    user.replace_one({'username': 'admin'}, admin, upsert=True)
+    con.close()
+
+
 if __name__ == "__main__":
     manager.run()
 

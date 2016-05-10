@@ -87,5 +87,7 @@ def index():
 
 @main.route('/scoreboard')
 def scoreboard():
-    users = User.objects.order_by('-score')
+
+    # Exclude builtin admin
+    users = User.objects.filter(username__ne='admin').order_by('-score')
     return render_template('scoreboard.html', users=users)
