@@ -29,13 +29,14 @@ def index():
             flash('You must be logged in to submit challenges')
             return redirect(url_for('main.index'))
 
+        # Grab the first key in the POST form data to lookup the challenge and process the submission
+        form_c = Challenge.objects.get(id=str(next(request.form.keys())).split('-')[0])
+
         for form in forms:
-            form_c = Challenge.objects.get(id=str(form['f'].challenge_submission.name).split('-')[0])
 
             if form['f'].challenge_submission.data and \
                form['f'].challenge_submission.data != '' and \
                form['f'].validate():
-
                 a = Audit(user=current_user.username,
                           message_type="user",
                           ip=request.remote_addr)
