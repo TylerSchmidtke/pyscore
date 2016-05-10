@@ -156,6 +156,8 @@ def user_modify(user):
         if form.score.data:
             u.update(set__score=form.score.data)
             flash('Score updated')
+
+        # Make role changes, verify the user has the role to prevent addition or removal of undesired roles.
         if form.role.data != '':
             if form.remove_role.data:
                 if form.role.data in u.roles:
