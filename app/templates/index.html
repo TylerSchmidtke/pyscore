@@ -12,22 +12,22 @@
         <th class="hidden-xs hidden-sm">Success / Failure</th>
     </tr>
     <tbody>
-    {% for form in forms %}
+    {% for form in forms.values() %}
     <tr>
-        {%  if not form.solved %}
-        <td>{{ wtf.quick_form(form.f) }}</td>
+        {%  if not form['solved'] %}
+        <td>{{ wtf.quick_form(form['f']) }}</td>
         {% else %}
         <td class="table-left">Solved!</td>
         {% endif %}
         <td class="table-left">
-            {{ form.challenge_text }}
-            {% if form.attachment_path %}
+            {{ form['challenge_text'] }}
+            {% if form['attachment_path'] %}
             <br>
-            <a href="{{ url_for('static', filename='attachments/' + form.attachment_path) }}">{{ form.attachment_path }}</a>
+            <a href="{{ url_for('static', filename='attachments/' + form['attachment_path']) }}">{{ form['attachment_path'] }}</a>
             {% endif %}
         </td>
-        <td class="table-left">{{ form.points }}</td>
-        <td class="hidden-xs hidden-sm">{{ form.successes }} / {{ form.failures }}</td>
+        <td class="table-left">{{ form['points'] }}</td>
+        <td class="hidden-xs hidden-sm">{{ form['successes'] }} / {{ form['failures'] }}</td>
     </tr>
     {% endfor %}
     </tbody>
@@ -40,9 +40,9 @@
     <tbody>
     {% for form in forms %}
     <tr>
-        <td class="table-left">{{ form.challenge_text }}</td>
-        <td class="table-left">{{ form.points}}</td>
-        <td class="table-left hidden-xs hidden-sm">{{ form.successes }} / {{ form.failures }}</td>
+        <td class="table-left">{{ form['challenge_text'] }}</td>
+        <td class="table-left">{{ form['points'] }}</td>
+        <td class="table-left hidden-xs hidden-sm">{{ form['successes'] }} / {{ form['failures'] }}</td>
     </tr>
     {%  endfor %}
     </tbody>
