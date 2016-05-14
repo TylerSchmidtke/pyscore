@@ -15,6 +15,8 @@ import os
 def create_challenge():
     form = CreateChallengeForm()
     if form.validate_on_submit():
+
+        # Get the hash type selected and generate
         if form.hash_type.data and form.hash_type.data != "custom":
             hasher = getattr(hash, form.hash_type.data)
             form.challenge_text.data = hasher.encrypt(form.plain_text.data.rstrip())
@@ -22,6 +24,7 @@ def create_challenge():
                 form.notes.data = "Hash Type: {} // {}".format(form.hash_type.data, form.notes.data)
             else:
                 form.notes.data = form.hash_type.data
+
         if not form.case_sensitive.data:
             form.plain_text.data = form.plain_text.data.rstrip().lower()
         c = Challenge(plain_text=form.plain_text.data.rstrip(),
@@ -31,15 +34,16 @@ def create_challenge():
                       active=form.active.data,
                       case_sensitive=form.case_sensitive.data,
                       fuzzy_answer=form.fuzzy_answer.data)
-        c.save()
         if request.files['attachment']:
             filename = attachments.save(request.files['attachment'])
             c.attachment_path = filename
-            c.save()
+
         a = Audit(user=current_user.username,
                   message="Created challenge " + str(c.id),
                   message_type="admin",
                   ip=request.remote_addr)
+
+        c.save()
         a.save()
         flash("Challenge created.")
         return redirect(url_for('admin.create_challenge'))
