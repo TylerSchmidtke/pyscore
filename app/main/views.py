@@ -10,7 +10,7 @@ import collections
 @main.route('/', methods=['GET', 'POST'])
 def index():
 
-    # Build a OrderedDict of forms for each challenge.
+    # Build an OrderedDict of forms for each challenge.
     # This should work because there should never be duplicate challenge IDs.
     # Associate challenge details with the form
     forms = collections.OrderedDict()
@@ -52,6 +52,7 @@ def index():
                       ip=request.remote_addr)
             submission = sub_form['f'].challenge_submission.data.rstrip()
 
+            # Verify the user hasn't solved the challenge and check the submission
             if form_c.id not in current_user.solved_challenges:
                 if not form_c.case_sensitive:
                     submission = submission.lower()

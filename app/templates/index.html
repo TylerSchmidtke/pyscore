@@ -38,7 +38,7 @@
         <th class="table-left hidden-xs hidden-sm">Success / Failure</th>
     </tr>
     <tbody>
-    {% for form in forms %}
+    {% for form in forms.values() %}
     <tr>
         <td class="table-left">{{ form['challenge_text'] }}</td>
         <td class="table-left">{{ form['points'] }}</td>
