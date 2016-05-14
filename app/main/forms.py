@@ -1,6 +1,6 @@
 from flask.ext.wtf import Form
-from wtforms import StringField, HiddenField, SubmitField
-from wtforms.validators import Regexp, DataRequired
+from wtforms import StringField, SubmitField
+from wtforms.validators import Regexp
 
 
 class ChallengeForm(Form):
