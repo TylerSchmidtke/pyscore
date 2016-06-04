@@ -12,6 +12,7 @@ class User(UserMixin, db.Document):
     roles = db.ListField(required=True, default=['user'])
     join_time = db.DateTimeField(default=datetime.datetime.now)
     solved_challenges = db.ListField(default=[])
+    hints = db.ListField(default=[])
     registration_ip = db.StringField(default=None)
 
     def __init__(self, **kwargs):
@@ -29,7 +30,9 @@ class Challenge(db.Document):
     challenge_text = db.StringField(required=True)
     attachment_path = db.StringField(required=False)
     notes = db.StringField(required=False, max_length=1024, default=None)
-    points = db.IntField(required=True, default=5)
+    points = db.IntField(required=True, default=10)
+    hint = db.StringField(required=False, max_length=256, default=None)
+    hint_points = db.IntField(required=False, default=5)
     failures = db.IntField(required=True, default=0)
     successes = db.IntField(required=True, default=0)
     active = db.BooleanField(required=True, default=True)
