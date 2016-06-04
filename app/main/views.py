@@ -1,7 +1,7 @@
 from flask import redirect, url_for, render_template, flash, request
 from flask.ext.login import current_user
 from fuzzywuzzy import fuzz
-from .forms import ChallengeForm
+from .forms import ChallengeForm, HintForm
 from . import main
 from ..models import Challenge, User, Audit
 import collections
@@ -24,11 +24,16 @@ def index():
         forms[str(challenge.id)] = {
             'f': ChallengeForm(prefix=str(challenge.id)),
             'challenge_text': challenge.challenge_text,
+            'challenge_id': challenge.id,
             'points': challenge.points,
+            'hint': challenge.hint,
+            'hint_points': challenge.hint_points,
+            'hint_form': HintForm(prefix=str(challenge.id) + "-hint"),
             'attachment_path': challenge.attachment_path,
             'successes': challenge.successes,
             'failures': challenge.failures,
-            'solved': solved
+            'solved': solved,
+            'user_hints': current_user.hints
         }
 
     # Check the submission
@@ -39,11 +44,21 @@ def index():
             return redirect(url_for('main.index'))
 
         # Grab the first key in the POST form data to lookup the challenge and process the submission
+        print(next(request.form.keys()).split('-')[0])
         c_id = str(next(request.form.keys()).split('-')[0])
         form_c = Challenge.objects.get(id=c_id)
         sub_form = forms[c_id]
 
-        # check the submission data and
+        # Check if submission is for a hint
+        if (c_id + "-hint-submit") in request.form and \
+           form_c.id not in sub_form['user_hints']:
+
+            u = User.objects.get(id=current_user.id)
+            u.update(push__hints=form_c.id)
+            flash("Activated hint.")
+            return redirect(url_for('main.index'))
+
+        # Check the submission data
         if sub_form['f'].challenge_submission.data and \
            sub_form['f'].challenge_submission.data != '' and \
            sub_form['f'].validate():
@@ -61,7 +76,13 @@ def index():
                     ratio = fuzz.token_sort_ratio(form_c.plain_text, sub_form['f'].challenge_submission.data)
                     if ratio >= 83:
                         u = User.objects.get(id=current_user.id)
-                        u.update(inc__score=form_c.points, upsert=True)
+
+                        # check if hint was used
+                        if form_c.id in current_user.hints:
+                            u.update(inc__score=form_c.points - form_c.hint_points, upsert=True)
+                        else:
+                            u.update(inc__score=form_c.points, upsert=True)
+
                         u.update(push__solved_challenges=form_c.id, upsert=True)
                         form_c.update(inc__successes=1)
                         flash("Correct!")
@@ -76,7 +97,13 @@ def index():
 
                 elif submission == form_c.plain_text:
                     u = User.objects.get(id=current_user.id)
-                    u.update(inc__score=form_c.points, upsert=True)
+
+                    # check if hint was used
+                    if form_c.id in current_user.hints:
+                        u.update(inc__score=form_c.points - form_c.hint_points, upsert=True)
+                    else:
+                        u.update(inc__score=form_c.points, upsert=True)
+
                     u.update(push__solved_challenges=form_c.id, upsert=True)
                     form_c.update(inc__successes=1)
                     flash("Correct!")

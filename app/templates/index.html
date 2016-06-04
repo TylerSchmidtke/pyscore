@@ -25,6 +25,15 @@
             <br>
             <a href="{{ url_for('static', filename='attachments/' + form['attachment_path']) }}">{{ form['attachment_path'] }}</a>
             {% endif %}
+
+            {% if form['hint'] and form['challenge_id'] in form['user_hints'] and not form['solved'] %}
+            <br><br>
+            <p>Hint ({{ form['hint_points'] }} point penalty): {{ form['hint'] }}</p>
+            {% elif form['hint'] and not form['solved'] %}
+            <br><br>
+            <p>Hint (Penalty of {{ form['hint_points'] }}): {{ wtf.quick_form(form['hint_form']) }}</p>
+            {% endif %}
+
         </td>
         <td class="table-left">{{ form['points'] }}</td>
         <td class="hidden-xs hidden-sm">{{ form['successes'] }} / {{ form['failures'] }}</td>

@@ -9,8 +9,10 @@
         {{ wtf.form_field(form.plain_text) }}
         {{ wtf.form_field(form.hash_type, onchange="hide_challenge_text(this)") }}
         {{ wtf.form_field(form.challenge_text) }}
-        {{ wtf.form_field(form.notes) }}
+        {{ wtf.form_field(form.hint) }}
+        {{ wtf.form_field(form.hint_points) }}
         {{ wtf.form_field(form.points) }}
+        {{ wtf.form_field(form.notes) }}
         {{ wtf.form_field(form.active) }}
         {{ wtf.form_field(form.case_sensitive) }}
         {{ wtf.form_field(form.fuzzy_answer) }}

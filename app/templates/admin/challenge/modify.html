@@ -7,29 +7,38 @@
         <tr>
             <th class="text-center">Plain Text</th>
             <th class="text-center">Challenge Text</th>
+            <th class="text-center hidden-xs">Hint</th>
+            <th class="text-center hidden-xs">Hint Penalty</th>
             <th class="text-center hidden-xs">Attachment</th>
-            <th class="text-center hidden-xs">Points</th>
-            <th class="text-center hidden-xs">Active</th>
+            <th class="text-center">Points</th>
+            <th class="text-center">Active</th>
         </tr>
         <tbody>
             <tr>
                 <td class="text-center">{{ challenge.plain_text }}</td>
                 <td class="text-center">{{ challenge.challenge_text }}</td>
+                {% if challenge.hint %}
+                <td class="text-center hidden-xs">{{ challenge.hint }}</td>
+                <td class="text-center hidden-xs">{{ challenge.hint_points }}</td>
+                {% else %}
+                <td class="text-center hidden-xs"></td>
+                <td class="text-center hidden-xs"></td>
+                {% endif %}
                 {% if challenge.attachment_path %}
                 <td class="text-center hidden-xs"><a href="{{ url_for('static', filename='attachments/' + challenge.attachment_path) }}">{{ challenge.attachment_path }}</a></td>
                 {% else %}
                 <td class="text-center hidden-xs">None</td>
                 {% endif %}
-                <td class="text-center hidden-xs">{{ challenge.points }}</td>
-                <td class="text-center hidden-xs">{{ challenge.active }}</td>
+                <td class="text-center">{{ challenge.points }}</td>
+                <td class="text-center">{{ challenge.active }}</td>
             </tr>
         </tbody>
     </table>
     <table class="table table-responsive table-fill visible-xs">
         <tr>
             <th class="text-center visible-xs">Attachment</th>
-            <th class="text-center visible-xs">Points</th>
-            <th class="text-center visible-xs">Active</th>
+            <th class="text-center visible-xs">Hint</th>
+            <th class="text-center visible-xs">Hint Penalty</th>
         </tr>
         <tbody>
             <tr>
@@ -38,8 +47,13 @@
                 {% else %}
                 <td class="text-center">None</td>
                 {% endif %}
-                <td class="text-center">{{ challenge.points }}</td>
-                <td class="text-center">{{ challenge.active }}</td>
+                {% if challenge.hint %}
+                <td class="text-center visible-xs">{{ challenge.hint }}</td>
+                <td class="text-center visible-xs">{{ challenge.hint_points }}</td>
+                {% else %}
+                <td class="text-center visible-xs"></td>
+                <td class="text-center visible-xs"></td>
+                {% endif %}
             </tr>
         </tbody>
     </table>

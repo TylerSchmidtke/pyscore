@@ -11,3 +11,5 @@ class ChallengeForm(Form):
     submit = SubmitField('Submit')
 
 
+class HintForm(Form):
+    submit = SubmitField('Show Hint')

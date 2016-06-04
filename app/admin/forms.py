@@ -6,7 +6,7 @@ from wtforms.validators import DataRequired, Length, Regexp, Optional
 from .. import ROLES
 
 POINTS = [(i, i) for i in list(range(10, 105, 5))]
-PENALTIES = [(i, i) for i in list(range(5, 105, 5))]
+PENALTIES = [(i, i) for i in list(range(0, 105, 5))]
 
 # Role removal choices, you can't remove user
 REMOVE_ROLES = ROLES
@@ -39,7 +39,8 @@ class CreateChallengeForm(Form):
                                              Regexp('.*[A-Za-z0-9_.\h\?]*$',
                                                     0,
                                                     'Notes must have only letters, '
-                                                    'numbers, dots, spaces, or underscores.')])
+                                                    'numbers, dots, spaces, or underscores.'),
+                                             Optional()])
     hint_points = SelectField('Hint Penalty', choices=PENALTIES, coerce=int)
     notes = TextAreaField('Notes', validators=[Length(max=1024),
                                                Regexp('.*[A-Za-z0-9_.\h\?]*$',

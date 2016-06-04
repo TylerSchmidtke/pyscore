@@ -31,6 +31,8 @@ def create_challenge():
                       challenge_text=form.challenge_text.data.rstrip(),
                       notes=form.notes.data,
                       points=form.points.data,
+                      hint=form.hint.data,
+                      hint_points=form.hint_points.data,
                       active=form.active.data,
                       case_sensitive=form.case_sensitive.data,
                       fuzzy_answer=form.fuzzy_answer.data)
@@ -77,8 +79,16 @@ def modify_challenge(challenge_id):
         if form.delete.data:
             # Delete challenge from all users, adjust their score,
             # and delete the challenge
+
+            # If the user got a hint, adjust score appropriately
+            User.objects(solved_challenges__contains=c.id, hints__contains=c.id).update(
+                inc__score=-(c.points-c.hint_points))
+            User.objects(solved_challenges__contains=c.id, hints__contains=c.id).update(
+                pull__solved_challenges=c.id)
+
             User.objects(solved_challenges__contains=c.id).update(inc__score=-c.points)
-            User.objects(solved_challenges__contains=c.id).update(pull__solved_challenges=c)
+            User.objects(solved_challenges__contains=c.id).update(pull__solved_challenges=c.id)
+
             if c.attachment_path and \
                     os.path.isfile('app/static/attachments/' + c.attachment_path):
                 os.remove('app/static/attachments/' + c.attachment_path)

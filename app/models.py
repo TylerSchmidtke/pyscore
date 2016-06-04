@@ -32,7 +32,7 @@ class Challenge(db.Document):
     notes = db.StringField(required=False, max_length=1024, default=None)
     points = db.IntField(required=True, default=10)
     hint = db.StringField(required=False, max_length=256, default=None)
-    hint_points = db.IntField(required=False, default=5)
+    hint_points = db.IntField(required=False)
     failures = db.IntField(required=True, default=0)
     successes = db.IntField(required=True, default=0)
     active = db.BooleanField(required=True, default=True)
