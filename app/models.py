@@ -47,6 +47,7 @@ class Role(db.Document):
 
 class AnonymousUser(AnonymousUserMixin):
     roles = []
+    hints = []
 
 
 class Audit(db.Document):

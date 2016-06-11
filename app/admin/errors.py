@@ -9,4 +9,4 @@ def page_not_found(e):
 
 @admin.app_errorhandler(500)
 def server_error(e):
-    return redirect(url_for('..views/index'))
+    return redirect(url_for('main.index'))
