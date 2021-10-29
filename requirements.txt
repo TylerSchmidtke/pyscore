@@ -2,7 +2,7 @@ bcrypt==2.0.0
 blinker==1.4
 cffi==1.6.0
 dominate==2.2.0
-Flask==0.10.1
+Flask==1.0
 Flask-Bcrypt==0.7.1
 Flask-Bootstrap==3.3.5.7
 Flask-Login==0.3.2
