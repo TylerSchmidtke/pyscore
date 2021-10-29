@@ -13,7 +13,7 @@ Flask-Uploads==0.2.0
 Flask-WTF==0.12
 fuzzywuzzy==0.10.0
 itsdangerous==0.24
-Jinja2==2.8
+Jinja2==2.11.3
 MarkupSafe==0.23
 mongoengine==0.10.6
 passlib==1.6.5
